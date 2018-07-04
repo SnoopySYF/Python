@@ -1,3 +1,7 @@
-import numpy
+from MySql import(
+    getAllCustomer, getAllProduct, getArrears, getInventory
+) 
 
-À¬»ø
+results = getAllCustomer()
+#for row in results:
+print(results)
