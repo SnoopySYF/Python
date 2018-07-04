@@ -1,7 +1,7 @@
 from MySql import(
-    getAllCustomer, getAllProduct
+    getAllCustomer, getAllProduct, getArrears, getInventory
 ) 
 
-results = getAllProduct()
-for row in results:
-    print(row[0] + " " + row[1] + " " + row[2])
+results = getAllCustomer()
+#for row in results:
+print(results)
