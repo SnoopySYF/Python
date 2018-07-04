@@ -209,7 +209,7 @@ class Ui_Dialog(object):
     #def CodeShowClick(self):
 
     def Add(self,text):
-        self.client_cs_cb.addItem(text);
+        self.client_cs_cb.addItem(text)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
