@@ -1,3 +1,7 @@
-import numpy
+from MySql import(
+    getAllCustomer, getAllProduct
+) 
 
-À¬»ø
+results = getAllProduct()
+for row in results:
+    print(row[0] + " " + row[1] + " " + row[2])
