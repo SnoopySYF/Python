@@ -1,8 +1,7 @@
-
 import pymysql
 
 config = {
-          'host':'localhost',
+          'host':'172.19.195.175',#数据库所在主机IP
           'port':3306,#MySQL默认端口
           'user':'root',#mysql默认用户名
           'password':'123456',
@@ -11,7 +10,7 @@ config = {
           'cursorclass':pymysql.cursors.DictCursor,
           }
 
-def getAllCustomer():
+def getAllCustomers():
     db= pymysql.connect(**config)
     cursor = db.cursor()
     sql = "SELECT * FROM customer"
@@ -20,7 +19,7 @@ def getAllCustomer():
     db.close()
     return results
 
-def getAllProduct():
+def getAllProducts():
     db= pymysql.connect(**config)
     cursor = db.cursor()
     sql = "SELECT * FROM product"

@@ -1,5 +1,5 @@
 use orders;
-SELECT * FROM inventory;
+SELECT * FROM arrears;
 SELECT * FROM customer;
 SELECT * FROM product;
 SELECT * FROM arrears;

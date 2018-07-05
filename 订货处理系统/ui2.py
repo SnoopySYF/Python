@@ -183,7 +183,7 @@ class Ui_Dialog(object):
         self.tree_run_bt.clicked.connect(self.TreeRunClick)
        # self.illustrate_bt.clicked.connect(self.IllustrateClick)
        # self.code_show_bt.clicked.connect(self.CodeShowClick)
-        self.exit_bt.clicked.connect(Dialog.reject)
+       # self.exit_bt.clicked.connect(Dialog.reject)
         
 
         self.retranslateUi(Dialog)

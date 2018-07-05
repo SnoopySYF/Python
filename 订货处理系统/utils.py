@@ -1,9 +1,17 @@
 from MySql import(
-    getAllCustomer, getAllProduct, getArrears, getInventory
+    getAllCustomers, getAllProducts, getArrears, getInventory
 ) 
-from ui2 import Ui_Dialog
 
-def updataCustomer(ui):
-    customerInfo = getAllCustomer()
-    for row in customerInfo:
-        ui.Add(row['custid'] + " : " + row['custname'])
+def updateCustomers(ui):
+    customerInfo = getAllCustomers()
+    return customerInfo
+
+def updateProduct():
+    productInfo = getAllProducts()
+
+def updateArrears(custid):
+    arrears = getArrears(custid)
+    if(arrears):
+        return arrears[0]["amount"], arrears[0]["lastdate"]
+    else:
+        return 0, 0
