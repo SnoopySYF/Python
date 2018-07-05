@@ -3,12 +3,13 @@ from MySql import(
     getAllCustomers, getAllProducts, getArrears, getInventory
 ) 
 
-def updateCustomers(ui):
+def updateCustomers():
     customerInfo = getAllCustomers()
     return customerInfo
 
-def updateProduct():
+def updateProducts():
     productInfo = getAllProducts()
+    return productInfo
 
 def updateArrears(custid):
     arrears = getArrears(custid)

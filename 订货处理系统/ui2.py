@@ -7,7 +7,9 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from utils import updateCustomers
+from utils import(
+    updateCustomers, updateProducts
+)
 import sys
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -197,7 +199,12 @@ class Ui_Dialog(object):
         self.client_info_lb.setStyleSheet("color:black")
         self.good_info_lb.setStyleSheet("color:black")
         self.strategy_lb.setStyleSheet("color:gray")
-        updateCustomers(self)
+        customers = updateCustomers()
+        for custom in customers:
+            self.UpdateCustomers(custom[0]['custid'] + " : " + custom[0]['custname'])
+        products = updateProducts()
+        for product in products:
+            self.UpdateProducts(product[0]['productid'] + " : " + product[0]['productname'])
         
         
 
@@ -217,6 +224,10 @@ class Ui_Dialog(object):
     def UpdateCustomers(self,text):
         #self.client_cs_cb.
         self.client_cs_cb.addItem(text)
+
+    def UpdateProducts(self,text):
+        #self.client_cs_cb.
+        self.good_cs_cb.addItem(text)
 
     #def ClientChange(self):
         
