@@ -1,9 +1,12 @@
 from MySql import(
     getAllCustomer, getAllProduct, getArrears, getInventory
 ) 
-from ui2 import Ui_Dialog
+
 
 def updataCustomer(ui):
+    print(1)
     customerInfo = getAllCustomer()
+    print(customerInfo)
     for row in customerInfo:
-        ui.Add(row['custid'] + " : " + row['custname'])
+        ui.UpdateCustomers(row['custid'] + " : " + row['custname'])
+        print(1)

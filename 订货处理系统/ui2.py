@@ -7,6 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from utils import updataCustomer
 import sys
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -184,7 +185,10 @@ class Ui_Dialog(object):
        # self.illustrate_bt.clicked.connect(self.IllustrateClick)
        # self.code_show_bt.clicked.connect(self.CodeShowClick)
         self.exit_bt.clicked.connect(Dialog.reject)
-        
+
+        self.client_cs_cb.currentIndexChanged.connect(self.ClientChange)
+        self.good_cs_cb.currentIndexChanged.connect(self.GoodChange)
+        self.good_time_cb.currentIndexChanged.connect(self.TimeChange)
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -193,6 +197,8 @@ class Ui_Dialog(object):
         self.client_info_lb.setStyleSheet("color:black")
         self.good_info_lb.setStyleSheet("color:black")
         self.strategy_lb.setStyleSheet("color:gray")
+        updataCustomer(self)
+        
         
 
     #def TreeShowClick(self):
@@ -208,8 +214,16 @@ class Ui_Dialog(object):
 
     #def CodeShowClick(self):
 
-    def Add(self,text):
+    def UpdateCustomers(self,text):
+        #self.client_cs_cb.
         self.client_cs_cb.addItem(text)
+
+    #def ClientChange(self):
+        
+
+   # def GoodChange(self):
+
+   # def TimeChange(self):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -240,10 +254,8 @@ class Ui_Dialog(object):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
+    MainWindow = QtWidgets.QDialog()
     ui = Ui_Dialog()
     ui.setupUi(MainWindow)
-    ui.Add("21")
-    ui.Add("32")
     MainWindow.show()
     sys.exit(app.exec_())
