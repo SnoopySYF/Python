@@ -1,11 +1,7 @@
 import pymysql
 
 config = {
-<<<<<<< HEAD
           'host':'172.19.195.175',#数据库所在主机IP
-=======
-          'host':'172.19.195.175',
->>>>>>> 538830a1dd3e4018468c5e24e8785a7e1c7f6c5b
           'port':3306,#MySQL默认端口
           'user':'root',#mysql默认用户名
           'password':'123456',
@@ -49,8 +45,3 @@ def getInventory(productid):
     results = cursor.fetchall()
     db.close()
     return results  
-
-
-if __name__ == "__main__":
-    we = getAllCustomer()
-    print(we)

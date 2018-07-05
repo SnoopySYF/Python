@@ -7,7 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from utils import updataCustomer
+from utils import updateCustomers
 import sys
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -184,16 +184,11 @@ class Ui_Dialog(object):
         self.tree_run_bt.clicked.connect(self.TreeRunClick)
        # self.illustrate_bt.clicked.connect(self.IllustrateClick)
        # self.code_show_bt.clicked.connect(self.CodeShowClick)
-<<<<<<< HEAD
-       # self.exit_bt.clicked.connect(Dialog.reject)
-        
-=======
         self.exit_bt.clicked.connect(Dialog.reject)
 
-        self.client_cs_cb.currentIndexChanged.connect(self.ClientChange)
-        self.good_cs_cb.currentIndexChanged.connect(self.GoodChange)
-        self.good_time_cb.currentIndexChanged.connect(self.TimeChange)
->>>>>>> 538830a1dd3e4018468c5e24e8785a7e1c7f6c5b
+        # self.client_cs_cb.currentIndexChanged.connect(self.ClientChange)
+        # self.good_cs_cb.currentIndexChanged.connect(self.GoodChange)
+        # self.good_time_cb.currentIndexChanged.connect(self.TimeChange)
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -202,7 +197,7 @@ class Ui_Dialog(object):
         self.client_info_lb.setStyleSheet("color:black")
         self.good_info_lb.setStyleSheet("color:black")
         self.strategy_lb.setStyleSheet("color:gray")
-        updataCustomer(self)
+        updateCustomers(self)
         
         
 
