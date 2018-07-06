@@ -5,11 +5,10 @@
 # Created by: PyQt5 UI code generator 5.10.1
 #
 # WARNING! All changes made in this file will be lost!
-from PyQt5 import(
-    QtCore, QtGui, QtWidgets
-)
+
+from PyQt5 import QtCore, QtGui, QtWidgets
 from utils import(
-    updateCustomers, updateProducts
+    updateCustomers, updateProducts, getProductArrears, getProduct
 )
 import sys
 class Ui_Dialog(object):
@@ -189,9 +188,9 @@ class Ui_Dialog(object):
        # self.code_show_bt.clicked.connect(self.CodeShowClick)
         self.exit_bt.clicked.connect(Dialog.reject)
 
-        # self.client_cs_cb.currentIndexChanged.connect(self.ClientChange)
-        # self.good_cs_cb.currentIndexChanged.connect(self.GoodChange)
-        # self.good_time_cb.currentIndexChanged.connect(self.TimeChange)
+       # self.client_cs_cb.currentIndexChanged.connect(self.ClientChange)
+       # self.good_cs_cb.currentIndexChanged.connect(self.GoodChange)
+       # self.good_time_cb.currentIndexChanged.connect(self.TimeChange)
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -202,12 +201,14 @@ class Ui_Dialog(object):
         self.strategy_lb.setStyleSheet("color:gray")
         self.client_cs_cb.clear()
         self.good_cs_cb.clear()
+        print(1)
         customers = updateCustomers()
+        print(0)
         for custom in customers:
             self.UpdateCustomers(custom['custid'] + " : " + custom['custname'])
         products = updateProducts()
         for product in products:
-            self.UpdateProducts(product['productid'] + " : " + product['productname']
+            self.UpdateProducts(product['productid'] + " : " + product['productname'])
         
 
     #def TreeShowClick(self):
