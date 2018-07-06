@@ -17,7 +17,7 @@ input: customer: custid : cusname
 return: amount lastdate
 error return: 0 0
 '''
-def getProductArrears(customer):
+def getCustomerArrears(customer):
     cust = customer.split(" ")
     custid = cust[0]
     arrears = getArrears(custid)
