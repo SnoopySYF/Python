@@ -54,3 +54,4 @@ def getProductUnit(productid):
     unit = cursor.fetchall()
     db.close()
     return unit
+
