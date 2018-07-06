@@ -68,10 +68,10 @@ class Ui_Dialog(object):
         self.strategy_lb.setGeometry(QtCore.QRect(30, 260, 72, 15))
         self.strategy_lb.setObjectName("strategy_lb")
         self.client_cs_cb = QtWidgets.QComboBox(Dialog)
-        self.client_cs_cb.setGeometry(QtCore.QRect(140, 80, 91, 22))
+        self.client_cs_cb.setGeometry(QtCore.QRect(140, 80, 181, 22))
         self.client_cs_cb.setObjectName("client_cs_cb")
         self.good_cs_cb = QtWidgets.QComboBox(Dialog)
-        self.good_cs_cb.setGeometry(QtCore.QRect(140, 180, 91, 22))
+        self.good_cs_cb.setGeometry(QtCore.QRect(140, 180, 181, 22))
         self.good_cs_cb.setObjectName("good_cs_cb")
         self.lib_num_show_lb = QtWidgets.QLabel(Dialog)
         self.lib_num_show_lb.setGeometry(QtCore.QRect(560, 180, 72, 15))
@@ -200,13 +200,14 @@ class Ui_Dialog(object):
         self.client_info_lb.setStyleSheet("color:black")
         self.good_info_lb.setStyleSheet("color:black")
         self.strategy_lb.setStyleSheet("color:gray")
+        self.client_cs_cb.clear()
+        self.good_cs_cb.clear()
         customers = updateCustomers()
         for custom in customers:
             self.UpdateCustomers(custom['custid'] + " : " + custom['custname'])
         products = updateProducts()
         for product in products:
-            self.UpdateProducts(product['productid'] + " : " + product['productname'])
-        
+            self.UpdateProducts(product['productid'] + " : " + product['productname']
         
 
     #def TreeShowClick(self):
@@ -223,11 +224,9 @@ class Ui_Dialog(object):
     #def CodeShowClick(self):
 
     def UpdateCustomers(self,text):
-        #self.client_cs_cb.
         self.client_cs_cb.addItem(text)
 
     def UpdateProducts(self,text):
-        #self.client_cs_cb.
         self.good_cs_cb.addItem(text)
 
     #def ClientChange(self):
