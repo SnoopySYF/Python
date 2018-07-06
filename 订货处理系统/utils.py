@@ -58,40 +58,49 @@ def day_count(order_time ,owe_time):#计算欠款天数 订货时间 欠款时�
 
 '''
 输入：订货数量， 库存， 是否欠款（根据这个后两项可选）， 订货时间， 欠款时间
-返回：判定过程，判定结果
+返回：订单是否成立，判定过程，判定结果
 '''
 def Decision(order_num, store_num, ifowe, order_time = None ,owe_time = None):
+    order = True
     result = ""
     process = ""
     if(ifowe==False):
         if(order_num>store_num):
+            order = True
             process = "判定1：欠款时间为0天\n判定2：库存数量" + str(store_num) + " 小于 订货数量" + str(order_num)
             result = "先按库存发货进货再补发"
         else:
+            order = True
             process = "判定1：欠款时间为0天\n判定2：库存数量" + str(store_num) + " 大于等于 订货数量" + str(order_num)
             result = "立即发货"
     else:
         day_num = day_count(order_time ,owe_time).days  #欠款天数
         if(day_num <= 30):
             if(order_num <= store_num):
+                order = True
                 process = "判定1：欠款时间为" + str(day_num) + "天\n判定2：库存数量" + str(store_num) + " 大于等于 订货数量" + str(order_num)
                 result = "立即发货"
             else:
+                order = True
                 process = "判定1：欠款时间为" + str(day_num) + "天\n判定2：库存数量" + str(store_num) + " 小于 订货数量" + str(order_num)
                 result = "先按库存发货进货再补发"
         elif(30 < day_num < 100):
             if(order_num <= store_num):
+                order = True
                 process = "判定1：欠款时间为" + str(day_num) + "天\n判定2：库存数量" + str(store_num) + " 大于等于 订货数量" + str(order_num)
                 result = "先付款再发货"
             else:
+                order = False
                 process = "判定1：欠款时间为" + str(day_num) + "天\n判定2：库存数量" + str(store_num) + " 小于 订货数量" + str(order_num)
                 result = "不发货"
         elif(day_num >= 100):
             if(order_num <= store_num):
+                order = False
                 process = "判定1：欠款时间为" + str(day_num) + "天"
                 result = "通知先付款"
             else:
+                order = False
                 process = "判定1：欠款时间为" + str(day_num) + "天"
                 result = "通知先付款"
-    return process, result
+    return order, process, result
 
