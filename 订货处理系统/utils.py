@@ -64,8 +64,10 @@ def Decision(order_num, store_num, ifowe, order_time = None ,owe_time = None):
     order = True
     result = ""
     process = ""
+    order_num = int(order_num)
+    store_num = int(store_num)
     if(ifowe==False):
-        if(order_num>store_num):
+        if(order_num > store_num):
             order = True
             process = "判定1：欠款时间为0天\n判定2：库存数量" + str(store_num) + " 小于 订货数量" + str(order_num)
             result = "先按库存发货进货再补发"
@@ -103,4 +105,3 @@ def Decision(order_num, store_num, ifowe, order_time = None ,owe_time = None):
                 process = "判定1：欠款时间为" + str(day_num) + "天"
                 result = "通知先付款"
     return order, process, result
-

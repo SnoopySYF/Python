@@ -55,3 +55,9 @@ def getProductUnit(productid):
     db.close()
     return unit
 
+def InsertOrder(custid, productid, num):
+    db= pymysql.connect(**config)
+    cursor = db.cursor()
+    sql = "INSERT INTO orders VALUES (custid, productid, num)"
+    cursor.execute(sql)
+    db.close()
