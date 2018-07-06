@@ -45,3 +45,12 @@ def getInventory(productid):
     results = cursor.fetchall()
     db.close()
     return results  
+
+def getProductUnit(productid):
+    db= pymysql.connect(**config)
+    cursor = db.cursor()
+    sql = "SELECT unit FROM product WHERE productid = '%s'" % (productid)
+    cursor.execute(sql)
+    unit = cursor.fetchall()
+    db.close()
+    return unit

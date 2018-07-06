@@ -5,8 +5,9 @@
 # Created by: PyQt5 UI code generator 5.10.1
 #
 # WARNING! All changes made in this file will be lost!
-
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import(
+    QtCore, QtGui, QtWidgets
+)
 from utils import(
     updateCustomers, updateProducts
 )
@@ -201,10 +202,10 @@ class Ui_Dialog(object):
         self.strategy_lb.setStyleSheet("color:gray")
         customers = updateCustomers()
         for custom in customers:
-            self.UpdateCustomers(custom[0]['custid'] + " : " + custom[0]['custname'])
+            self.UpdateCustomers(custom['custid'] + " : " + custom['custname'])
         products = updateProducts()
         for product in products:
-            self.UpdateProducts(product[0]['productid'] + " : " + product[0]['productname'])
+            self.UpdateProducts(product['productid'] + " : " + product['productname'])
         
         
 
