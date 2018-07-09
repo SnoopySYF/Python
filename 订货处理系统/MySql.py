@@ -10,6 +10,10 @@ config = {
           'cursorclass':pymysql.cursors.DictCursor,
           }
 
+'''
+访问数据库，获取所有用户信息
+返回：用户信息  （格式：[[{key:value},...], ...]）
+'''
 def getAllCustomers():
     db= pymysql.connect(**config)
     cursor = db.cursor()
@@ -19,6 +23,10 @@ def getAllCustomers():
     db.close()
     return results
 
+'''
+访问数据库，获取所有产品信息
+返回：产品信息  （格式：[[{key:value},...], ...]）
+'''
 def getAllProducts():
     db= pymysql.connect(**config)
     cursor = db.cursor()
@@ -28,6 +36,11 @@ def getAllProducts():
     db.close()
     return results
 
+'''
+访问数据库，获取用户欠款信息
+输入：用户id
+返回：欠款信息  （格式：[[{key:value}, ...]]）
+'''
 def getArrears(custid):
     db= pymysql.connect(**config)
     cursor = db.cursor()
@@ -37,6 +50,11 @@ def getArrears(custid):
     db.close()
     return results
 
+'''
+访问数据库，获取产品库存信息
+输入：产品id
+返回：库存信息  （格式：[[{key:value}, ...]]）
+'''
 def getInventory(productid):
     db= pymysql.connect(**config)
     cursor = db.cursor()
@@ -46,6 +64,11 @@ def getInventory(productid):
     db.close()
     return results  
 
+'''
+访问数据库，获取产品单位信息
+输入：产品id
+返回：单位信息  （格式：[[{key:value}, ...]]）
+'''
 def getProductUnit(productid):
     db= pymysql.connect(**config)
     cursor = db.cursor()
@@ -55,6 +78,10 @@ def getProductUnit(productid):
     db.close()
     return unit
 
+'''
+访问数据库，插入订单信息
+输入：用户id，产品id，订货数量，类型（D1,D2,D3）
+'''
 def InsertOrder(custid, productid, num, form):
     db= pymysql.connect(**config)
     cursor = db.cursor()
@@ -64,6 +91,10 @@ def InsertOrder(custid, productid, num, form):
     db.commit()
     db.close()
 
+'''
+访问数据库，删除订单信息
+输入：用户id，产品id
+'''
 def DeleteOrder(custid, productid):
     db= pymysql.connect(**config)
     cursor = db.cursor()
@@ -72,6 +103,10 @@ def DeleteOrder(custid, productid):
     db.commit()
     db.close()
 
+'''
+访问数据库，更新产品库存
+输入：产品id，更改后的库存
+'''
 def UpdateInventory(productid, qty):
     db= pymysql.connect(**config)
     cursor = db.cursor()

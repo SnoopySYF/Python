@@ -3,19 +3,27 @@ from MySql import(
     getAllCustomers, getAllProducts, getArrears, getInventory, getProductUnit, InsertOrder, DeleteOrder, UpdateInventory
 ) 
 
+'''
+获取所有用户信息
+返回：用户信息  （格式：[[{key:value},...], ...]）
+'''
 def updateCustomers():
     customerInfo = getAllCustomers()
     return customerInfo
 
+'''
+获取所有产品信息
+返回：产品信息  （格式：[[{key:value},...], ...]）
+'''
 def updateProducts():
     productInfo = getAllProducts()
     return productInfo
 
 
 '''
-input: customer: custid : cusname
-return: amount lastdate
-error return: 0 0
+获取用户的欠款信息
+输入：用户信息（从updateCustomers()获取的信息）
+输出：欠款，欠款时间（没有欠款返回0，0）
 '''
 def getCustomerArrears(customer):
     cust = customer.split(" ")
@@ -28,9 +36,9 @@ def getCustomerArrears(customer):
 
 
 '''
-get product's unit and qty
-input: productid
-return: unit, qty
+获取产品的单位和库存
+输入：产品信息（从updateProducts（）获取的信息）
+输出：单位，库存（没有库存返回0）
 '''
 def getProduct(product):
     prod = product.split(" ")
