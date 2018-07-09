@@ -3,8 +3,8 @@
 from MySql import(
     getAllCustomers, getAllProducts, getArrears, getInventory, getProductUnit
 ) 
+from PyQt5 import QtCore, QtGui, QtWidgets
 import datetime
 
-result = getAllCustomers()
-print(result)
+
 

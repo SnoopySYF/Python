@@ -55,9 +55,27 @@ def getProductUnit(productid):
     db.close()
     return unit
 
-def InsertOrder(custid, productid, num):
+def InsertOrder(custid, productid, num, form):
     db= pymysql.connect(**config)
     cursor = db.cursor()
-    sql = "INSERT INTO orders VALUES (custid, productid, num)"
+    sql = "INSERT INTO orders(custid, productid, num, form) VALUES (%s, %s, %s, %s)"
+    data = (custid, productid, num, form)
+    cursor.execute(sql, data)
+    db.commit()
+    db.close()
+
+def DeleteOrder(custid, productid):
+    db= pymysql.connect(**config)
+    cursor = db.cursor()
+    sql = "DELETE FROM orders WHERE custid = '%s' and productid = '%s'" % (custid, productid)
     cursor.execute(sql)
+    db.commit()
+    db.close()
+
+def UpdateInventory(productid, qty):
+    db= pymysql.connect(**config)
+    cursor = db.cursor()
+    sql = "UPDATE inventory SET qty = %s WHERE productid = %s" % (qty, productid)
+    cursor.execute(sql)
+    db.commit()
     db.close()

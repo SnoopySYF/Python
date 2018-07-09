@@ -27,6 +27,7 @@ CREATE TABLE orders(
     custid CHAR(20) NOT NULL,
     productid CHAR(20) NOT NULL,
     num INT,
+    form CHAR(10),
     PRIMARY KEY(custid, productid)
 );
 

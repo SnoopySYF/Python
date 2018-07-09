@@ -1,6 +1,6 @@
 import datetime
 from MySql import(
-    getAllCustomers, getAllProducts, getArrears, getInventory, getProductUnit
+    getAllCustomers, getAllProducts, getArrears, getInventory, getProductUnit, InsertOrder, DeleteOrder, UpdateInventory
 ) 
 
 def updateCustomers():
@@ -53,7 +53,6 @@ def day_count(order_time ,owe_time):#计算欠款天数 订货时间 欠款时�
     owe_day = int(temp[2])
     date1=datetime.datetime(order_year,order_month,order_day)
     date2 = datetime.datetime(owe_year, owe_month, owe_day)
-    print(date1-date2)
     return date1-date2
 
 '''
@@ -61,47 +60,63 @@ def day_count(order_time ,owe_time):#计算欠款天数 订货时间 欠款时�
 返回：订单是否成立，判定过程，判定结果
 '''
 def Decision(order_num, store_num, ifowe, order_time = None ,owe_time = None):
-    order = True
+    order = ""
     result = ""
     process = ""
     order_num = int(order_num)
     store_num = int(store_num)
     if(ifowe==False):
         if(order_num > store_num):
-            order = True
+            order = "D2"
             process = "判定1：欠款时间为0天\n判定2：库存数量" + str(store_num) + " 小于 订货数量" + str(order_num)
             result = "先按库存发货进货再补发"
         else:
-            order = True
+            order = "D1"
             process = "判定1：欠款时间为0天\n判定2：库存数量" + str(store_num) + " 大于等于 订货数量" + str(order_num)
             result = "立即发货"
     else:
         day_num = day_count(order_time ,owe_time).days  #欠款天数
         if(day_num <= 30):
             if(order_num <= store_num):
-                order = True
+                order = "D1"
                 process = "判定1：欠款时间为" + str(day_num) + "天\n判定2：库存数量" + str(store_num) + " 大于等于 订货数量" + str(order_num)
                 result = "立即发货"
             else:
-                order = True
+                order = "D2"
                 process = "判定1：欠款时间为" + str(day_num) + "天\n判定2：库存数量" + str(store_num) + " 小于 订货数量" + str(order_num)
                 result = "先按库存发货进货再补发"
         elif(30 < day_num < 100):
             if(order_num <= store_num):
-                order = True
+                order = "D3"
                 process = "判定1：欠款时间为" + str(day_num) + "天\n判定2：库存数量" + str(store_num) + " 大于等于 订货数量" + str(order_num)
                 result = "先付款再发货"
             else:
-                order = False
+                order = "D3"
                 process = "判定1：欠款时间为" + str(day_num) + "天\n判定2：库存数量" + str(store_num) + " 小于 订货数量" + str(order_num)
                 result = "不发货"
         elif(day_num >= 100):
             if(order_num <= store_num):
-                order = False
+                order = "D3"
                 process = "判定1：欠款时间为" + str(day_num) + "天"
                 result = "通知先付款"
             else:
-                order = False
+                order = "D3"
                 process = "判定1：欠款时间为" + str(day_num) + "天"
                 result = "通知先付款"
     return order, process, result
+
+'''
+创建订单
+输入：客户id，产品id，订货数，库存数，类型（D1，D2，D3）
+'''
+def CreateOrder(custid, productid, order_num, store_num, form):
+    order_num = int(order_num)
+    store_num = int(store_num)
+    if(form == "D1"):
+        InsertOrder(custid, productid, order_num, form)
+        UpdateInventory(productid, store_num - order_num)
+    elif(form == "D2"):
+        InsertOrder(custid, productid, order_num, form)
+    elif(form == "D3"):
+        InsertOrder(custid, productid, order_num, form)
+        
