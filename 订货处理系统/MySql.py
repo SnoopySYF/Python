@@ -105,7 +105,7 @@ def DeleteOrder(custid, productid):
 
 '''
 访问数据库，更新产品库存
-输入：产品id，更改后的库存
+输入：产品id，更新后的库存
 '''
 def UpdateInventory(productid, qty):
     db= pymysql.connect(**config)
