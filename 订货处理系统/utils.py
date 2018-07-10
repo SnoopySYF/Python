@@ -6,6 +6,7 @@ from MySql import(
 '''
 获取所有用户信息
 返回：用户信息  （格式：[[{key:value},...], ...]）
+数据库异常返回0
 '''
 def updateCustomers():
     customerInfo = getAllCustomers()
@@ -14,6 +15,7 @@ def updateCustomers():
 '''
 获取所有产品信息
 返回：产品信息  （格式：[[{key:value},...], ...]）
+数据库异常返回0
 '''
 def updateProducts():
     productInfo = getAllProducts()
@@ -24,6 +26,7 @@ def updateProducts():
 获取用户的欠款信息
 输入：用户信息（从updateCustomers()获取的信息）
 输出：欠款，欠款时间（没有欠款返回0，0）
+数据库异常返回0
 '''
 def getCustomerArrears(customer):
     cust = customer.split(" ")
@@ -41,6 +44,7 @@ def getCustomerArrears(customer):
 获取产品的单位和库存
 输入：产品信息（从updateProducts（）获取的信息）
 输出：单位，库存（没有库存返回0）
+数据库异常返回0
 '''
 def getProduct(product):
     prod = product.split(" ")
@@ -120,6 +124,7 @@ def Decision(order_num, store_num, ifowe, order_time = None ,owe_time = None):
 '''
 创建订单
 输入：客户id，产品id，订货数，库存数，类型（D1，D2，D3）
+数据库异常返回0
 '''
 def CreateOrder(custid, productid, order_num, store_num, form):
     order_num = int(order_num)

@@ -109,14 +109,17 @@ def InsertOrder(custid, productid, num, form):
     try:
         db= pymysql.connect(**config)
         cursor = db.cursor()
-        sql = "INSERT INTO orders(custid, productid, num, form) VALUES (%s, %s, %s, %s)"
-        data = (custid, productid, num, form)
-        cursor.execute(sql, data)
-        db.commit()
+        try:
+            sql = "INSERT INTO orders(custid, productid, num, form) VALUES (%s, %s, %s, %s)"
+            data = (custid, productid, num, form)
+            cursor.execute(sql, data)
+            db.commit()
+        except Exception:
+            db.rollback()
+            return 0
         db.close()
         return 1
     except Exception:
-        db.rollback()
         return 0
 
 '''
@@ -128,13 +131,16 @@ def DeleteOrder(custid, productid):
     try:
         db= pymysql.connect(**config)
         cursor = db.cursor()
-        sql = "DELETE FROM orders WHERE custid = '%s' and productid = '%s'" % (custid, productid)
-        cursor.execute(sql)
-        db.commit()
+        try:
+            sql = "DELETE FROM orders WHERE custid = '%s' and productid = '%s'" % (custid, productid)
+            cursor.execute(sql)
+            db.commit()
+        except Exception:
+            db.rollback()
+            return 0
         db.close()
         return 1
     except Exception:
-        db.rollback()
         return 0
 
 '''
@@ -146,11 +152,14 @@ def UpdateInventory(productid, qty):
     try:
         db= pymysql.connect(**config)
         cursor = db.cursor()
-        sql = "UPDATE inventory SET qty = %s WHERE productid = %s" % (qty, productid)
-        cursor.execute(sql)
-        db.commit()
+        try:
+            sql = "UPDATE inventory SET qty = %s WHERE productid = %s" % (qty, productid)
+            cursor.execute(sql)
+            db.commit()
+        except Exception:
+            db.rollback()
+            return 0
         db.close()
         return 1
     except Exception:
-        db.rollback()
         return 0
