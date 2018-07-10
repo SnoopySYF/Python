@@ -10,6 +10,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from utils import(
     updateCustomers, updateProducts, getCustomerArrears, getProduct, Decision
 )
+from PyQt5.QtCore import QDate
 import sys
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -22,9 +23,11 @@ class Ui_Dialog(object):
         self.tree_show_bt = QtWidgets.QPushButton(Dialog)
         self.tree_show_bt.setGeometry(QtCore.QRect(110, 10, 93, 28))
         self.tree_show_bt.setText("显示判定树")
+        self.tree_show_bt.setEnabled(False)
         self.tree_run_bt = QtWidgets.QPushButton(Dialog)
         self.tree_run_bt.setGeometry(QtCore.QRect(210, 10, 93, 28))
         self.tree_run_bt.setText("运行判定树")
+        self.tree_run_bt.setEnabled(False)
         self.illustrate_bt = QtWidgets.QPushButton(Dialog)
         self.illustrate_bt.setGeometry(QtCore.QRect(310, 10, 93, 28))
         self.illustrate_bt.setText("程序说明") 
@@ -38,25 +41,32 @@ class Ui_Dialog(object):
         self.client_info_lb = QtWidgets.QLabel(Dialog)
         self.client_info_lb.setGeometry(QtCore.QRect(30, 50, 91, 16))
         self.client_info_lb.setText("订货客户信息")
+        self.client_info_lb.setEnabled(False)
         
         self.client_cs_lb = QtWidgets.QLabel(Dialog)
         self.client_cs_lb.setGeometry(QtCore.QRect(40, 80, 72, 15))
         self.client_cs_lb.setText("选择客户：")
+        self.client_cs_lb.setEnabled(False)
         self.client_cs_cb = QtWidgets.QComboBox(Dialog)
         self.client_cs_cb.setGeometry(QtCore.QRect(140, 80, 201, 22))
         self.client_cs_cb.addItem("选择客户")
+        self.client_cs_cb.setEnabled(False)
         
         self.debt_lb = QtWidgets.QLabel(Dialog)
         self.debt_lb.setGeometry(QtCore.QRect(40, 110, 72, 15))
         self.debt_lb.setText("欠款金额：")
+        self.debt_lb.setEnabled(False)
         self.debt_show_lb = QtWidgets.QLabel(Dialog)
         self.debt_show_lb.setGeometry(QtCore.QRect(140, 110, 72, 15))
+        self.debt_show_lb.setEnabled(False)
         
         self.debt_time_lb = QtWidgets.QLabel(Dialog)
         self.debt_time_lb.setGeometry(QtCore.QRect(280, 110, 72, 15))
         self.debt_time_lb.setText("欠款时间")
+        self.debt_time_lb.setEnabled(False)
         self.debt_time_show_lb = QtWidgets.QLabel(Dialog)
         self.debt_time_show_lb.setGeometry(QtCore.QRect(370, 110, 82, 15))
+        self.debt_time_show_lb.setEnabled(False)
         
         self.line_1t1 = QtWidgets.QFrame(Dialog)
         self.line_1t1.setGeometry(QtCore.QRect(10, 50, 16, 16))
@@ -82,33 +92,46 @@ class Ui_Dialog(object):
         self.product_info_lb = QtWidgets.QLabel(Dialog)
         self.product_info_lb.setGeometry(QtCore.QRect(30, 150, 91, 16))
         self.product_info_lb.setText("订货产品信息")
+        self.product_info_lb.setEnabled(False)
         
         self.product_cs_lb = QtWidgets.QLabel(Dialog)
         self.product_cs_lb.setGeometry(QtCore.QRect(40, 180, 72, 15))
         self.product_cs_lb.setText("选择产品：")
+        self.product_cs_lb.setEnabled(False)
         self.product_cs_cb = QtWidgets.QComboBox(Dialog)
         self.product_cs_cb.setGeometry(QtCore.QRect(140, 180, 161, 22))
         self.product_cs_cb.addItem("选择产品")
+        self.product_cs_cb.setEnabled(False)
         
         self.lib_num_lb = QtWidgets.QLabel(Dialog)
         self.lib_num_lb.setGeometry(QtCore.QRect(460, 180, 72, 15))
         self.lib_num_lb.setText("库存数量")
+        self.lib_num_lb.setEnabled(False)
         self.lib_num_show_lb = QtWidgets.QLabel(Dialog)
         self.lib_num_show_lb.setGeometry(QtCore.QRect(560, 180, 72, 15))
+        self.lib_num_show_lb.setEnabled(False)
         self.lib_unit_lb = QtWidgets.QLabel(Dialog)
         self.lib_unit_lb.setGeometry(QtCore.QRect(640, 180, 72, 15))
+        self.lib_unit_lb.setEnabled(False)
         
         self.order_num_lb = QtWidgets.QLabel(Dialog)
         self.order_num_lb.setGeometry(QtCore.QRect(40, 220, 72, 15))
         self.order_num_lb.setText("订货数量：")
+        self.order_num_lb.setEnabled(False)
         self.order_num_edit = QtWidgets.QLineEdit(Dialog)
         self.order_num_edit.setGeometry(QtCore.QRect(140, 220, 91, 21))
+        self.order_num_edit.setEnabled(False)
         
         self.order_time_lb = QtWidgets.QLabel(Dialog)
         self.order_time_lb.setGeometry(QtCore.QRect(460, 220, 72, 15))
         self.order_time_lb.setText("订货时间：")
-        self.good_time_cb = QtWidgets.QComboBox(Dialog)
-        self.good_time_cb.setGeometry(QtCore.QRect(560, 220, 87, 22))
+        self.order_time_lb.setEnabled(False)
+        self.order_time_de = QtWidgets.QDateEdit(Dialog)
+        self.order_time_de.setGeometry(QtCore.QRect(560, 220, 100, 22))
+        self.order_time_de.setEnabled(False)
+        self.order_time_de.setDate(QDate.currentDate())
+        self.order_time_de.setDisplayFormat("yyyy-MM-dd")
+        
         
         self.line_2t1 = QtWidgets.QFrame(Dialog)
         self.line_2t1.setGeometry(QtCore.QRect(10, 150, 16, 16))
@@ -134,18 +157,23 @@ class Ui_Dialog(object):
         self.strategy_lb = QtWidgets.QLabel(Dialog)
         self.strategy_lb.setGeometry(QtCore.QRect(30, 260, 72, 15))
         self.strategy_lb.setText("处置策略")
+        self.strategy_lb.setEnabled(False)
         
         self.judge_pro_lb = QtWidgets.QLabel(Dialog)
         self.judge_pro_lb.setGeometry(QtCore.QRect(40, 290, 72, 15))
         self.judge_pro_lb.setText("判定过程")
+        self.judge_pro_lb.setEnabled(False)
         self.judge_pro_tb = QtWidgets.QTextBrowser(Dialog)
         self.judge_pro_tb.setGeometry(QtCore.QRect(40, 320, 291, 91))
+        self.judge_pro_tb.setEnabled(False)
         
         self.result_lb = QtWidgets.QLabel(Dialog)
         self.result_lb.setGeometry(QtCore.QRect(430, 290, 72, 15))
         self.result_lb.setText("判定结果")
+        self.result_lb.setEnabled(False)
         self.result_show_lb = QtWidgets.QLabel(Dialog)
         self.result_show_lb.setGeometry(QtCore.QRect(430, 310, 201, 31))
+        self.result_show_lb.setEnabled(False)
         
         self.line_3t1 = QtWidgets.QFrame(Dialog)
         self.line_3t1.setGeometry(QtCore.QRect(10, 260, 16, 16))
@@ -174,7 +202,7 @@ class Ui_Dialog(object):
 
 
         self.input_list_bt.clicked.connect(self.InputListClick)
-       # self.tree_show_bt.clicked.connect(self.TreeShowClick)
+        self.tree_show_bt.clicked.connect(self.TreeShowClick)
         self.tree_run_bt.clicked.connect(self.TreeRunClick)
        # self.illustrate_bt.clicked.connect(self.IllustrateClick)
        # self.code_show_bt.clicked.connect(self.CodeShowClick)
@@ -182,71 +210,109 @@ class Ui_Dialog(object):
 
         self.client_cs_cb.currentTextChanged.connect(self.ClientChange)
         self.product_cs_cb.currentTextChanged.connect(self.ProductChange)
-       # self.good_time_cb.currentIndexChanged.connect(self.TimeChange)
 
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-    def InputListClick(self):
-        self.client_info_lb.setStyleSheet("color:black")
-        self.product_info_lb.setStyleSheet("color:black")
-        self.strategy_lb.setStyleSheet("color:gray")
+    def ClientProductEnabled(self,bol):
+        self.client_info_lb.setEnabled(bol)
+        self.client_cs_lb.setEnabled(bol)
+        self.client_cs_cb.setEnabled(bol)
+        self.debt_lb.setEnabled(bol)
+        self.debt_show_lb.setEnabled(bol)
+        self.debt_time_lb.setEnabled(bol)
+        self.debt_time_show_lb.setEnabled(bol)
+        self.product_info_lb.setEnabled(bol)
+        self.product_cs_lb.setEnabled(bol)
+        self.product_cs_cb.setEnabled(bol)
+        self.lib_num_lb.setEnabled(bol)
+        self.lib_num_show_lb.setEnabled(bol)
+        self.lib_unit_lb.setEnabled(bol)
+        self.order_num_lb.setEnabled(bol)
+        self.order_num_edit.setEnabled(bol)
+        self.order_time_lb.setEnabled(bol)
+        self.order_time_de.setEnabled(bol)
 
+    def Clear(self):
         self.client_cs_cb.currentTextChanged.disconnect(self.ClientChange)
-        self.product_cs_cb.currentTextChanged.disconnect(self.ProductChange)
         client_num = self.client_cs_cb.count()
-        for i in range(1,client_num):
+        for client in range(1,client_num):
             self.client_cs_cb.removeItem(1)
-        product_num = self.order_cs_cb.count()
-        for j in range(1,product_num):
-            self.order_cs_cb.removeItem(1)
-        self.client_cs_cb.currentTextChanged.connect(self.ClientChange)
-        self.product_cs_cb.currentTextChanged.connect(self.GoodChange)
-        print(1)
+        self.debt_show_lb.setText("")
+        self.debt_time_show_lb.setText("")
+        
+        self.product_cs_cb.currentTextChanged.disconnect(self.ProductChange)
+        product_num = self.product_cs_cb.count()
+        for product in range(1,product_num):
+            self.product_cs_cb.removeItem(1)
+        self.lib_num_show_lb.setText("")
+        self.lib_unit_lb.setText("")
+        self.order_num_edit.setText("")
+        self.order_time_de.setDate(QDate.currentDate())
+        self.judge_pro_tb.clear()
+        self.result_show_lb.setText("")
+
+    def JudgeEnabled(self,bol):
+        self.strategy_lb.setEnabled(bol)
+        self.judge_pro_lb.setEnabled(bol)
+        self.judge_pro_tb.setEnabled(bol)
+        self.result_lb.setEnabled(bol)
+        self.result_show_lb.setEnabled(bol)
+
+    def InputListClick(self):
+        self.Clear()
+        self.ClientProductEnabled(True)
+        self.JudgeEnabled(False)
+        self.tree_show_bt.setEnabled(True)
+        self.tree_run_bt.setEnabled(False)
         customers = updateCustomers()
-        print(0)
         for custom in customers:
-            self.UpdateCustomers(custom['custid'] + " : " + custom['custname'])
+            self.client_cs_cb.addItem(custom['custid'] + " : " + custom['custname'])
+        self.client_cs_cb.currentTextChanged.connect(self.ClientChange)
+        
         products = updateProducts()
         for product in products:
-            self.UpdateProducts(product['productid'] + " : " + product['productname'])
+            self.product_cs_cb.addItem(product['productid'] + " : " + product['productname'])
+        self.product_cs_cb.currentTextChanged.connect(self.ProductChange)
         
 
-    #def TreeShowClick(self):
-
-        
-
-    def TreeRunClick(self):
-        self.client_info_lb.setStyleSheet("color:gray")
-        self.product_info_lb.setStyleSheet("color:gray")
-        self.strategy_lb.setStyleSheet("color:black")
+    def TreeShowClick(self):
+        self.JudgeEnabled(True)
+        self.tree_run_bt.setEnabled(True)
         debt = self.debt_show_lb.text()
         debt_time = self.debt_time_show_lb.text()
         product_num = self.order_num_edit.text()
         lib_num = self.lib_num_show_lb.text()
-        good_time = "2014-6-11"
+        order_time = self.order_time_de.date().toString('yyyy-MM-dd')
         if debt == "无欠款":
             order, process, result = Decision(product_num, lib_num, False)
         else:
-            order, process, result = Decision(product_num, lib_num, True, good_time, debt_time)
+            order, process, result = Decision(product_num, lib_num, True, order_time, debt_time)
         self.judge_pro_tb.setText(process)
+
+    def TreeRunClick(self):
+        self.ClientProductEnabled(False)
+        self.tree_show_bt.setEnabled(False)
+        debt = self.debt_show_lb.text()
+        debt_time = self.debt_time_show_lb.text()
+        product_num = self.order_num_edit.text()
+        lib_num = self.lib_num_show_lb.text()
+        order_time = self.order_time_de.date().toString('yyyy-MM-dd')
+        if debt == "无欠款":
+            order, process, result = Decision(product_num, lib_num, False)
+        else:
+            order, process, result = Decision(product_num, lib_num, True, order_time, debt_time)
         self.result_show_lb.setText(result)
+        
 
     #def IllustrateClick(self):
 
     #def CodeShowClick(self):
 
-    def UpdateCustomers(self,text):
-        self.client_cs_cb.addItem(text)
-
-    def UpdateProducts(self,text):
-        self.product_cs_cb.addItem(text)
+    
 
     def ClientChange(self):
         client = self.client_cs_cb.currentText()
-        print(client)
         debt, debt_time = getCustomerArrears(client)
-        print(debt)
-        print(debt_time)
         if debt == 0:
             self.debt_show_lb.setText("无欠款")
             self.debt_time_show_lb.setText("")
@@ -255,12 +321,12 @@ class Ui_Dialog(object):
             self.debt_time_show_lb.setText(debt_time)
 
     def ProductChange(self):
-        good = self.good_cs_cb.currentText()
-        good_type, good_num = getProduct(good)
-        print(good_type)
-        print(good_num)
-        self.good_type_lb.setText(good_type)
-        self.lib_num_show_lb.setText(str(good_num))
+        product = self.product_cs_cb.currentText()
+        lib_unit, lib_num = getProduct(product)
+        self.lib_unit_lb.setText(lib_unit)
+        self.lib_num_show_lb.setText(str(lib_num))
+
+
 
    # def TimeChange(self):
 
