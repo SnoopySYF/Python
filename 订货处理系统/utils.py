@@ -29,7 +29,9 @@ def getCustomerArrears(customer):
     cust = customer.split(" ")
     custid = cust[0]
     arrears = getArrears(custid)
-    if(arrears):
+    if(arrears == 0):
+        return -1, -1
+    elif(arrears):
         return arrears[0]['amount'], arrears[0]['lastdate']
     else:
         return 0, 0
@@ -45,7 +47,9 @@ def getProduct(product):
     productid = prod[0]
     unit = getProductUnit(productid)
     qty = getInventory(productid)
-    if(qty):
+    if(qty == 0):
+        return -1, -1
+    elif(qty):
         return unit[0]['unit'], qty[0]['qty']
     else:
         return unit[0]['unit'], 0
@@ -121,10 +125,14 @@ def CreateOrder(custid, productid, order_num, store_num, form):
     order_num = int(order_num)
     store_num = int(store_num)
     if(form == "D1"):
-        InsertOrder(custid, productid, order_num, form)
-        UpdateInventory(productid, store_num - order_num)
+        if(InsertOrder(custid, productid, order_num, form) == 0):
+            return -1
+        if(UpdateInventory(productid, store_num - order_num) == 0):
+            return -1
     elif(form == "D2"):
-        InsertOrder(custid, productid, order_num, form)
+        if(InsertOrder(custid, productid, order_num, form) == 0):
+            return -1
     elif(form == "D3"):
-        InsertOrder(custid, productid, order_num, form)
+        if(InsertOrder(custid, productid, order_num, form) == 0):
+            return -1
         
