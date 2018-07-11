@@ -163,3 +163,6 @@ def UpdateInventory(productid, qty):
         return 1
     except Exception:
         return 0
+
+results = getAllCustomers()
+print(results)
