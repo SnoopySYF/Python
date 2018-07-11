@@ -126,7 +126,11 @@ def Decision(order_num, store_num, ifowe, order_time = None ,owe_time = None):
 输入：客户id，产品id，订货数，库存数，类型（D1，D2，D3）
 数据库异常返回-1
 '''
-def CreateOrder(custid, productid, order_num, store_num, form):
+def CreateOrder(customer, product, order_num, store_num, form):
+    cust = customer.split(" ")
+    custid = cust[0]
+    prod = product.split(" ")
+    productid = prod[0]
     order_num = int(order_num)
     store_num = int(store_num)
     if(form == "D1"):
