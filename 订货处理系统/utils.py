@@ -76,11 +76,17 @@ def day_count(order_time ,owe_time):#计算欠款天数 订货时间 欠款时�
 返回：订单类型（D1,D2,D3），判定过程，判定结果
 '''
 def Decision(order_num, store_num, ifowe, order_time = None ,owe_time = None):
+
     order = ""
     result = ""
     process = ""
-    order_num = int(order_num)
-    store_num = int(store_num)
+    try:
+        order_num = int(order_num)
+        store_num = int(store_num)
+    except Exception:
+        return -1, -1, -1
+    if(order_num < 0 or store_num < 0):
+        return -1, -1, -1
     if(ifowe==False):
         if(order_num > store_num):
             order = "D2"
@@ -144,4 +150,4 @@ def CreateOrder(customer, product, order_num, store_num, form):
     elif(form == "D3"):
         if(InsertOrder(custid, productid, order_num, form) == 0):
             return -1
-        
+
