@@ -11,6 +11,7 @@ from utils import(
     updateCustomers, updateProducts, getCustomerArrears, getProduct, Decision
 )
 from PyQt5.QtCore import QDate
+from PyQt5.QtWidgets import QMessageBox
 import sys
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -200,7 +201,6 @@ class Ui_Dialog(object):
         self.line_3m.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_3m.setFrameShadow(QtWidgets.QFrame.Sunken)
 
-
         self.input_list_bt.clicked.connect(self.InputListClick)
         self.tree_show_bt.clicked.connect(self.TreeShowClick)
         self.tree_run_bt.clicked.connect(self.TreeRunClick)
@@ -210,7 +210,7 @@ class Ui_Dialog(object):
 
         self.client_cs_cb.currentTextChanged.connect(self.ClientChange)
         self.product_cs_cb.currentTextChanged.connect(self.ProductChange)
-
+        
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def ClientProductEnabled(self,bol):
@@ -232,6 +232,13 @@ class Ui_Dialog(object):
         self.order_time_lb.setEnabled(bol)
         self.order_time_de.setEnabled(bol)
 
+    def JudgeEnabled(self,bol):
+        self.strategy_lb.setEnabled(bol)
+        self.judge_pro_lb.setEnabled(bol)
+        self.judge_pro_tb.setEnabled(bol)
+        self.result_lb.setEnabled(bol)
+        self.result_show_lb.setEnabled(bol)
+
     def Clear(self):
         self.client_cs_cb.currentTextChanged.disconnect(self.ClientChange)
         client_num = self.client_cs_cb.count()
@@ -251,25 +258,30 @@ class Ui_Dialog(object):
         self.judge_pro_tb.clear()
         self.result_show_lb.setText("")
 
-    def JudgeEnabled(self,bol):
-        self.strategy_lb.setEnabled(bol)
-        self.judge_pro_lb.setEnabled(bol)
-        self.judge_pro_tb.setEnabled(bol)
-        self.result_lb.setEnabled(bol)
-        self.result_show_lb.setEnabled(bol)
-
     def InputListClick(self):
+        print(1)
+        customers = updateCustomers()
+        print(customers);
+        if customers == 0:
+            print(2)
+            error = QMessageBox.critical(QtWidgets.QWidget(),"错误","数据库异常")
+            print(3)
+            return
+
+        products = updateProducts()
+        if products == 0:
+            error = QMessageBox.critical(QtWidgets.QWidget(),"错误","数据库异常")
+            
         self.Clear()
         self.ClientProductEnabled(True)
         self.JudgeEnabled(False)
         self.tree_show_bt.setEnabled(True)
         self.tree_run_bt.setEnabled(False)
-        customers = updateCustomers()
+        
         for custom in customers:
             self.client_cs_cb.addItem(custom['custid'] + " : " + custom['custname'])
         self.client_cs_cb.currentTextChanged.connect(self.ClientChange)
         
-        products = updateProducts()
         for product in products:
             self.product_cs_cb.addItem(product['productid'] + " : " + product['productname'])
         self.product_cs_cb.currentTextChanged.connect(self.ProductChange)
@@ -288,6 +300,7 @@ class Ui_Dialog(object):
         else:
             order, process, result = Decision(product_num, lib_num, True, order_time, debt_time)
         self.judge_pro_tb.setText(process)
+        
 
     def TreeRunClick(self):
         self.ClientProductEnabled(False)
@@ -302,6 +315,11 @@ class Ui_Dialog(object):
         else:
             order, process, result = Decision(product_num, lib_num, True, order_time, debt_time)
         self.result_show_lb.setText(result)
+
+        client = self.client_cs_cb.currentText()
+        product = self.product_cs_cb.currentText()
+        if CreateOrder(client, product, product_num, lib_num, order) == -1:
+            error = QMessageBox.critical(QtWidgets.QWidget(),"错误","数据库异常")
         
 
     #def IllustrateClick(self):
@@ -313,7 +331,9 @@ class Ui_Dialog(object):
     def ClientChange(self):
         client = self.client_cs_cb.currentText()
         debt, debt_time = getCustomerArrears(client)
-        if debt == 0:
+        if debt == -1:
+            error = QMessageBox.critical(QtWidgets.QWidget(),"错误","数据库异常")
+        elif debt == 0:
             self.debt_show_lb.setText("无欠款")
             self.debt_time_show_lb.setText("")
         else:
@@ -323,12 +343,12 @@ class Ui_Dialog(object):
     def ProductChange(self):
         product = self.product_cs_cb.currentText()
         lib_unit, lib_num = getProduct(product)
-        self.lib_unit_lb.setText(lib_unit)
-        self.lib_num_show_lb.setText(str(lib_num))
+        if lib_num == -1:
+            error = QMessageBox.critical(QtWidgets.QWidget(),"错误","数据库异常")
+        else:
+            self.lib_unit_lb.setText(lib_unit)
+            self.lib_num_show_lb.setText(str(lib_num))
 
-
-
-   # def TimeChange(self):
 
 
 if __name__ == "__main__":
