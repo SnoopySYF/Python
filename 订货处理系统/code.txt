@@ -1,3 +1,199 @@
+main.py
+#!/usr/bin/env python
+#-*- coding:utf-8 -*-
+from MySql import(
+    getAllCustomers, getAllProducts, getArrears, getInventory, getProductUnit
+) 
+from PyQt5 import QtCore, QtGui, QtWidgets
+import datetime
+from ui2 import Ui_Dialog
+import sys
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QDialog()
+    ui = Ui_Dialog()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
+
+
+
+MySql.py
+import pymysql
+
+config = {
+          'host':'172.19.195.175',#Êı¾İ¿âËùÔÚÖ÷»úIP
+          'port':3306,#MySQLÄ¬ÈÏ¶Ë¿Ú
+          'user':'root',#mysqlÄ¬ÈÏÓÃ»§Ãû
+          'password':'123456',
+          'db':'Orders',#Êı¾İ¿â
+          'charset':'utf8mb4',
+          'cursorclass':pymysql.cursors.DictCursor,
+          }
+
+'''
+·ÃÎÊÊı¾İ¿â£¬»ñÈ¡ËùÓĞÓÃ»§ĞÅÏ¢
+·µ»Ø£ºÓÃ»§ĞÅÏ¢  £¨¸ñÊ½£º[[{key:value},...], ...]£©
+Òì³££º·µ»Ø0
+'''
+def getAllCustomers():
+    try:
+        db= pymysql.connect(**config)
+        cursor = db.cursor()
+        sql = "SELECT * FROM customer"
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        db.close()
+        return results
+    except Exception:
+        return 0
+        
+
+'''
+·ÃÎÊÊı¾İ¿â£¬»ñÈ¡ËùÓĞ²úÆ·ĞÅÏ¢
+·µ»Ø£º²úÆ·ĞÅÏ¢  £¨¸ñÊ½£º[[{key:value},...], ...]£©
+Òì³££º·µ»Ø0
+'''
+def getAllProducts():
+    try:
+        db= pymysql.connect(**config)
+        cursor = db.cursor()
+        sql = "SELECT * FROM product"
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        db.close()
+        return results
+    except Exception:
+        return 0
+        
+
+'''
+·ÃÎÊÊı¾İ¿â£¬»ñÈ¡ÓÃ»§Ç·¿îĞÅÏ¢
+ÊäÈë£ºÓÃ»§id
+·µ»Ø£ºÇ·¿îĞÅÏ¢  £¨¸ñÊ½£º[[{key:value}, ...]]£©
+Òì³££º·µ»Ø0
+'''
+def getArrears(custid):
+    try:
+        db= pymysql.connect(**config)
+        cursor = db.cursor()
+        sql = "SELECT * FROM arrears WHERE custid = '%s'" % (custid)
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        db.close()
+        return results
+    except Exception:
+        return 0
+
+'''
+·ÃÎÊÊı¾İ¿â£¬»ñÈ¡²úÆ·¿â´æĞÅÏ¢
+ÊäÈë£º²úÆ·id
+·µ»Ø£º¿â´æĞÅÏ¢  £¨¸ñÊ½£º[[{key:value}, ...]]£©
+Òì³££º·µ»Ø0
+'''
+def getInventory(productid):
+    try:
+        db= pymysql.connect(**config)
+        cursor = db.cursor()
+        sql = "SELECT qty FROM inventory WHERE productid = '%s'" % (productid)
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        db.close()
+        return results  
+    except Exception:
+        return 0
+
+'''
+·ÃÎÊÊı¾İ¿â£¬»ñÈ¡²úÆ·µ¥Î»ĞÅÏ¢
+ÊäÈë£º²úÆ·id
+·µ»Ø£ºµ¥Î»ĞÅÏ¢  £¨¸ñÊ½£º[[{key:value}, ...]]£©
+Òì³££º·µ»Ø0
+'''
+def getProductUnit(productid):
+    try:
+        db= pymysql.connect(**config)
+        cursor = db.cursor()
+        sql = "SELECT unit FROM product WHERE productid = '%s'" % (productid)
+        cursor.execute(sql)
+        unit = cursor.fetchall()
+        db.close()
+        return unit
+    except Exception:
+        return 0
+
+'''
+·ÃÎÊÊı¾İ¿â£¬²åÈë¶©µ¥ĞÅÏ¢
+ÊäÈë£ºÓÃ»§id£¬²úÆ·id£¬¶©»õÊıÁ¿£¬ÀàĞÍ£¨D1,D2,D3£©
+Òì³££º·µ»Ø0
+'''
+def InsertOrder(custid, productid, num, form):
+    try:
+        db= pymysql.connect(**config)
+        cursor = db.cursor()
+        try:
+            sql = "INSERT INTO orders(custid, productid, num, form) VALUES (%s, %s, %s, %s)"
+            data = (custid, productid, num, form)
+            cursor.execute(sql, data)
+            db.commit()
+        except Exception:
+            db.rollback()
+            return 0
+        db.close()
+        return 1
+    except Exception:
+        return 0
+
+'''
+·ÃÎÊÊı¾İ¿â£¬É¾³ı¶©µ¥ĞÅÏ¢
+ÊäÈë£ºÓÃ»§id£¬²úÆ·id
+Òì³££º·µ»Ø0
+'''
+def DeleteOrder(custid, productid):
+    try:
+        db= pymysql.connect(**config)
+        cursor = db.cursor()
+        try:
+            sql = "DELETE FROM orders WHERE custid = '%s' and productid = '%s'" % (custid, productid)
+            cursor.execute(sql)
+            db.commit()
+        except Exception:
+            db.rollback()
+            return 0
+        db.close()
+        return 1
+    except Exception:
+        return 0
+
+'''
+·ÃÎÊÊı¾İ¿â£¬¸üĞÂ²úÆ·¿â´æ
+ÊäÈë£º²úÆ·id£¬¸üĞÂºóµÄ¿â´æ
+Òì³££º·µ»Ø0
+'''
+def UpdateInventory(productid, qty):
+    try:
+        db= pymysql.connect(**config)
+        cursor = db.cursor()
+        try:
+            sql = "UPDATE inventory SET qty = %s WHERE productid = %s" % (qty, productid)
+            cursor.execute(sql)
+            db.commit()
+        except Exception:
+            db.rollback()
+            return 0
+        db.close()
+        return 1
+    except Exception:
+        return 0
+
+
+
+
+
+
+
+
+ui2.py
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'untitled.ui'
@@ -15,48 +211,48 @@ from PyQt5.QtWidgets import QMessageBox
 import sys
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
-        #ç•Œé¢ç»˜åˆ¶
-        Dialog.setWindowTitle("è®¢å•å¤„ç†ç³»ç»Ÿ")
+        #½çÃæ»æÖÆ
+        Dialog.setWindowTitle("¶©µ¥´¦ÀíÏµÍ³")
         Dialog.resize(817, 450)
         
         self.input_list_bt = QtWidgets.QPushButton(Dialog)
         self.input_list_bt.setGeometry(QtCore.QRect(10, 10, 93, 28))
-        self.input_list_bt.setText("è¾“å…¥è®¢è´§å•")
+        self.input_list_bt.setText("ÊäÈë¶©»õµ¥")
         self.tree_show_bt = QtWidgets.QPushButton(Dialog)
         self.tree_show_bt.setGeometry(QtCore.QRect(110, 10, 93, 28))
-        self.tree_show_bt.setText("æ˜¾ç¤ºåˆ¤å®šæ ‘")
+        self.tree_show_bt.setText("ÏÔÊ¾ÅĞ¶¨Ê÷")
         self.tree_show_bt.setEnabled(False)
         self.tree_run_bt = QtWidgets.QPushButton(Dialog)
         self.tree_run_bt.setGeometry(QtCore.QRect(210, 10, 93, 28))
-        self.tree_run_bt.setText("è¿è¡Œåˆ¤å®šæ ‘")
+        self.tree_run_bt.setText("ÔËĞĞÅĞ¶¨Ê÷")
         self.tree_run_bt.setEnabled(False)
         self.illustrate_bt = QtWidgets.QPushButton(Dialog)
         self.illustrate_bt.setGeometry(QtCore.QRect(310, 10, 93, 28))
-        self.illustrate_bt.setText("ç¨‹åºè¯´æ˜") 
+        self.illustrate_bt.setText("³ÌĞòËµÃ÷") 
         self.code_show_bt = QtWidgets.QPushButton(Dialog)
         self.code_show_bt.setGeometry(QtCore.QRect(410, 10, 93, 28))
-        self.code_show_bt.setText("æ˜¾ç¤ºæºç ")
+        self.code_show_bt.setText("ÏÔÊ¾Ô´Âë")
         self.exit_bt = QtWidgets.QPushButton(Dialog)
         self.exit_bt.setGeometry(QtCore.QRect(510, 10, 93, 28))
-        self.exit_bt.setText("é€€å‡º")
+        self.exit_bt.setText("ÍË³ö")
         
         self.client_info_lb = QtWidgets.QLabel(Dialog)
         self.client_info_lb.setGeometry(QtCore.QRect(30, 50, 91, 16))
-        self.client_info_lb.setText("è®¢è´§å®¢æˆ·ä¿¡æ¯")
+        self.client_info_lb.setText("¶©»õ¿Í»§ĞÅÏ¢")
         self.client_info_lb.setEnabled(False)
         
         self.client_cs_lb = QtWidgets.QLabel(Dialog)
         self.client_cs_lb.setGeometry(QtCore.QRect(40, 80, 72, 15))
-        self.client_cs_lb.setText("é€‰æ‹©å®¢æˆ·ï¼š")
+        self.client_cs_lb.setText("Ñ¡Ôñ¿Í»§£º")
         self.client_cs_lb.setEnabled(False)
         self.client_cs_cb = QtWidgets.QComboBox(Dialog)
         self.client_cs_cb.setGeometry(QtCore.QRect(140, 80, 201, 22))
-        self.client_cs_cb.addItem("é€‰æ‹©å®¢æˆ·")
+        self.client_cs_cb.addItem("Ñ¡Ôñ¿Í»§")
         self.client_cs_cb.setEnabled(False)
         
         self.debt_lb = QtWidgets.QLabel(Dialog)
         self.debt_lb.setGeometry(QtCore.QRect(40, 110, 72, 15))
-        self.debt_lb.setText("æ¬ æ¬¾é‡‘é¢ï¼š")
+        self.debt_lb.setText("Ç·¿î½ğ¶î£º")
         self.debt_lb.setEnabled(False)
         self.debt_show_lb = QtWidgets.QLabel(Dialog)
         self.debt_show_lb.setGeometry(QtCore.QRect(140, 110, 72, 15))
@@ -64,7 +260,7 @@ class Ui_Dialog(object):
         
         self.debt_time_lb = QtWidgets.QLabel(Dialog)
         self.debt_time_lb.setGeometry(QtCore.QRect(280, 110, 72, 15))
-        self.debt_time_lb.setText("æ¬ æ¬¾æ—¶é—´")
+        self.debt_time_lb.setText("Ç·¿îÊ±¼ä")
         self.debt_time_lb.setEnabled(False)
         self.debt_time_show_lb = QtWidgets.QLabel(Dialog)
         self.debt_time_show_lb.setGeometry(QtCore.QRect(370, 110, 82, 15))
@@ -93,21 +289,21 @@ class Ui_Dialog(object):
         
         self.product_info_lb = QtWidgets.QLabel(Dialog)
         self.product_info_lb.setGeometry(QtCore.QRect(30, 150, 91, 16))
-        self.product_info_lb.setText("è®¢è´§äº§å“ä¿¡æ¯")
+        self.product_info_lb.setText("¶©»õ²úÆ·ĞÅÏ¢")
         self.product_info_lb.setEnabled(False)
         
         self.product_cs_lb = QtWidgets.QLabel(Dialog)
         self.product_cs_lb.setGeometry(QtCore.QRect(40, 180, 72, 15))
-        self.product_cs_lb.setText("é€‰æ‹©äº§å“ï¼š")
+        self.product_cs_lb.setText("Ñ¡Ôñ²úÆ·£º")
         self.product_cs_lb.setEnabled(False)
         self.product_cs_cb = QtWidgets.QComboBox(Dialog)
         self.product_cs_cb.setGeometry(QtCore.QRect(140, 180, 161, 22))
-        self.product_cs_cb.addItem("é€‰æ‹©äº§å“")
+        self.product_cs_cb.addItem("Ñ¡Ôñ²úÆ·")
         self.product_cs_cb.setEnabled(False)
         
         self.lib_num_lb = QtWidgets.QLabel(Dialog)
         self.lib_num_lb.setGeometry(QtCore.QRect(460, 180, 72, 15))
-        self.lib_num_lb.setText("åº“å­˜æ•°é‡")
+        self.lib_num_lb.setText("¿â´æÊıÁ¿")
         self.lib_num_lb.setEnabled(False)
         self.lib_num_show_lb = QtWidgets.QLabel(Dialog)
         self.lib_num_show_lb.setGeometry(QtCore.QRect(560, 180, 72, 15))
@@ -118,7 +314,7 @@ class Ui_Dialog(object):
         
         self.order_num_lb = QtWidgets.QLabel(Dialog)
         self.order_num_lb.setGeometry(QtCore.QRect(40, 220, 72, 15))
-        self.order_num_lb.setText("è®¢è´§æ•°é‡ï¼š")
+        self.order_num_lb.setText("¶©»õÊıÁ¿£º")
         self.order_num_lb.setEnabled(False)
         self.order_num_edit = QtWidgets.QLineEdit(Dialog)
         self.order_num_edit.setGeometry(QtCore.QRect(140, 220, 91, 21))
@@ -126,7 +322,7 @@ class Ui_Dialog(object):
         
         self.order_time_lb = QtWidgets.QLabel(Dialog)
         self.order_time_lb.setGeometry(QtCore.QRect(460, 220, 72, 15))
-        self.order_time_lb.setText("è®¢è´§æ—¶é—´ï¼š")
+        self.order_time_lb.setText("¶©»õÊ±¼ä£º")
         self.order_time_lb.setEnabled(False)
         self.order_time_de = QtWidgets.QDateEdit(Dialog)
         self.order_time_de.setGeometry(QtCore.QRect(560, 220, 100, 22))
@@ -158,12 +354,12 @@ class Ui_Dialog(object):
         
         self.strategy_lb = QtWidgets.QLabel(Dialog)
         self.strategy_lb.setGeometry(QtCore.QRect(30, 260, 72, 15))
-        self.strategy_lb.setText("å¤„ç½®ç­–ç•¥")
+        self.strategy_lb.setText("´¦ÖÃ²ßÂÔ")
         self.strategy_lb.setEnabled(False)
         
         self.judge_pro_lb = QtWidgets.QLabel(Dialog)
         self.judge_pro_lb.setGeometry(QtCore.QRect(40, 290, 72, 15))
-        self.judge_pro_lb.setText("åˆ¤å®šè¿‡ç¨‹")
+        self.judge_pro_lb.setText("ÅĞ¶¨¹ı³Ì")
         self.judge_pro_lb.setEnabled(False)
         self.judge_pro_tb = QtWidgets.QTextBrowser(Dialog)
         self.judge_pro_tb.setGeometry(QtCore.QRect(40, 320, 291, 91))
@@ -171,7 +367,7 @@ class Ui_Dialog(object):
         
         self.result_lb = QtWidgets.QLabel(Dialog)
         self.result_lb.setGeometry(QtCore.QRect(430, 290, 72, 15))
-        self.result_lb.setText("åˆ¤å®šç»“æœ")
+        self.result_lb.setText("ÅĞ¶¨½á¹û")
         self.result_lb.setEnabled(False)
         self.result_show_lb = QtWidgets.QLabel(Dialog)
         self.result_show_lb.setGeometry(QtCore.QRect(430, 310, 201, 31))
@@ -202,7 +398,7 @@ class Ui_Dialog(object):
         self.line_3m.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_3m.setFrameShadow(QtWidgets.QFrame.Sunken)
 
-        #ä¿¡å·æ§½ç»‘å®š
+        #ĞÅºÅ²Û°ó¶¨
         self.input_list_bt.clicked.connect(self.InputListClick)
         self.tree_show_bt.clicked.connect(self.TreeShowClick)
         self.tree_run_bt.clicked.connect(self.TreeRunClick)
@@ -213,8 +409,8 @@ class Ui_Dialog(object):
         self.product_cs_cb.currentTextChanged.connect(self.ProductChange)
         
       
-    #å®¢æˆ·ä¸äº§å“è¾“å…¥åŒºåŸŸä½¿èƒ½å‡½æ•°
-    #è¾“å…¥ï¼šTrue:ä½¿èƒ½, False:å–æ¶ˆä½¿èƒ½
+    #¿Í»§Óë²úÆ·ÊäÈëÇøÓòÊ¹ÄÜº¯Êı
+    #ÊäÈë£ºTrue:Ê¹ÄÜ, False:È¡ÏûÊ¹ÄÜ
     def ClientProductEnabled(self,bol):
         self.client_info_lb.setEnabled(bol)
         self.client_cs_lb.setEnabled(bol)
@@ -234,8 +430,8 @@ class Ui_Dialog(object):
         self.order_time_lb.setEnabled(bol)
         self.order_time_de.setEnabled(bol)
 
-    #åˆ¤å®šè¿‡ç¨‹ä¸ç»“æœè¾“å‡ºåŒºåŸŸä½¿èƒ½å‡½æ•°
-    #è¾“å…¥ï¼šTrue:ä½¿èƒ½, False:å–æ¶ˆä½¿èƒ½
+    #ÅĞ¶¨¹ı³ÌÓë½á¹ûÊä³öÇøÓòÊ¹ÄÜº¯Êı
+    #ÊäÈë£ºTrue:Ê¹ÄÜ, False:È¡ÏûÊ¹ÄÜ
     def JudgeEnabled(self,bol):
         self.strategy_lb.setEnabled(bol)
         self.judge_pro_lb.setEnabled(bol)
@@ -243,7 +439,7 @@ class Ui_Dialog(object):
         self.result_lb.setEnabled(bol)
         self.result_show_lb.setEnabled(bol)
 
-    #æ¸…é™¤æ‰€æœ‰è¾“å…¥è¾“å‡ºï¼Œåˆå§‹åŒ–ç•Œé¢å‡½æ•°
+    #Çå³ıËùÓĞÊäÈëÊä³ö£¬³õÊ¼»¯½çÃæº¯Êı
     def Clear(self):
         self.client_cs_cb.currentTextChanged.disconnect(self.ClientChange)
         client_num = self.client_cs_cb.count()
@@ -263,20 +459,20 @@ class Ui_Dialog(object):
         self.judge_pro_tb.clear()
         self.result_show_lb.setText("")
 
-    #è¾“å…¥è®¢è´§å•ç‚¹å‡»æ§½å‡½æ•°
-    #åŠ è½½å®¢æˆ·äº§å“ä¿¡æ¯ï¼Œä½¿èƒ½å®¢æˆ·äº§å“è¾“å…¥åŒºï¼Œå–æ¶ˆä½¿èƒ½åˆ¤å®šè¿‡ç¨‹ç»“æœåŒº
-    #ä½¿èƒ½æ˜¾ç¤ºåˆ¤å®šæ ‘æŒ‰é’®ï¼Œæ¶ˆèƒ½è¿è¡Œåˆ¤å®šæ ‘æŒ‰é’®
-    #å¼‚å¸¸å¼¹å‡ºæç¤ºæ¡†
+    #ÊäÈë¶©»õµ¥µã»÷²Ûº¯Êı
+    #¼ÓÔØ¿Í»§²úÆ·ĞÅÏ¢£¬Ê¹ÄÜ¿Í»§²úÆ·ÊäÈëÇø£¬È¡ÏûÊ¹ÄÜÅĞ¶¨¹ı³Ì½á¹ûÇø
+    #Ê¹ÄÜÏÔÊ¾ÅĞ¶¨Ê÷°´Å¥£¬ÏûÄÜÔËĞĞÅĞ¶¨Ê÷°´Å¥
+    #Òì³£µ¯³öÌáÊ¾¿ò
     def InputListClick(self):
         customers = updateCustomers()
         print(customers);
         if customers == 0:
-            error = QMessageBox.critical(QtWidgets.QWidget(),"é”™è¯¯","æ•°æ®åº“å¼‚å¸¸")
+            error = QMessageBox.critical(QtWidgets.QWidget(),"´íÎó","Êı¾İ¿âÒì³£")
             return
 
         products = updateProducts()
         if products == 0:
-            error = QMessageBox.critical(QtWidgets.QWidget(),"é”™è¯¯","æ•°æ®åº“å¼‚å¸¸")
+            error = QMessageBox.critical(QtWidgets.QWidget(),"´íÎó","Êı¾İ¿âÒì³£")
             
         self.Clear()
         self.ClientProductEnabled(True)
@@ -292,10 +488,10 @@ class Ui_Dialog(object):
             self.product_cs_cb.addItem(product['productid'] + " : " + product['productname'])
         self.product_cs_cb.currentTextChanged.connect(self.ProductChange)
         
-    #æ˜¾ç¤ºåˆ¤å®šæ ‘æŒ‰é’®ç‚¹å‡»æ§½å‡½æ•°
-    #ä½¿èƒ½åˆ¤å®šè¿‡ç¨‹ç»“æœåŒºï¼Œä½¿èƒ½è¿è¡Œåˆ¤å®šæ ‘æŒ‰é’®
-    #æ˜¾ç¤ºåˆ¤å®šè¿‡ç¨‹
-    #å¼‚å¸¸å¼¹å‡ºæç¤ºæ¡†
+    #ÏÔÊ¾ÅĞ¶¨Ê÷°´Å¥µã»÷²Ûº¯Êı
+    #Ê¹ÄÜÅĞ¶¨¹ı³Ì½á¹ûÇø£¬Ê¹ÄÜÔËĞĞÅĞ¶¨Ê÷°´Å¥
+    #ÏÔÊ¾ÅĞ¶¨¹ı³Ì
+    #Òì³£µ¯³öÌáÊ¾¿ò
     def TreeShowClick(self):
         self.JudgeEnabled(True)
         self.tree_run_bt.setEnabled(True)
@@ -304,20 +500,20 @@ class Ui_Dialog(object):
         product_num = self.order_num_edit.text()
         lib_num = self.lib_num_show_lb.text()
         order_time = self.order_time_de.date().toString('yyyy-MM-dd')
-        if debt == "æ— æ¬ æ¬¾":
+        if debt == "ÎŞÇ·¿î":
             order, process, result = Decision(product_num, lib_num, False)
         else:
             order, process, result = Decision(product_num, lib_num, True, order_time, debt_time)
         if order == -1:
-            error = QMessageBox.critical(QtWidgets.QWidget(),"é”™è¯¯","è®¢è´§é‡è¾“å…¥æœ‰è¯¯")
+            error = QMessageBox.critical(QtWidgets.QWidget(),"´íÎó","¶©»õÁ¿ÊäÈëÓĞÎó")
             return
         self.judge_pro_tb.setText(process)
         
         
-    #è¿è¡Œåˆ¤å®šæ ‘æŒ‰é’®ç‚¹å‡»æ§½å‡½æ•°
-    #æ¶ˆèƒ½å®¢æˆ·äº§å“è¾“å…¥åŒºï¼Œæ¶ˆèƒ½æ˜¾ç¤ºåˆ¤å®šæ ‘æŒ‰é’®
-    #æ˜¾ç¤ºåˆ¤å®šç»“æœï¼Œäº§ç”Ÿè®¢å•è¾“å…¥æ•°æ®åº“
-    #å¼‚å¸¸å¼¹å‡ºæç¤ºæ¡†
+    #ÔËĞĞÅĞ¶¨Ê÷°´Å¥µã»÷²Ûº¯Êı
+    #ÏûÄÜ¿Í»§²úÆ·ÊäÈëÇø£¬ÏûÄÜÏÔÊ¾ÅĞ¶¨Ê÷°´Å¥
+    #ÏÔÊ¾ÅĞ¶¨½á¹û£¬²úÉú¶©µ¥ÊäÈëÊı¾İ¿â
+    #Òì³£µ¯³öÌáÊ¾¿ò
     def TreeRunClick(self):
         self.ClientProductEnabled(False)
         self.tree_show_bt.setEnabled(False)
@@ -326,53 +522,208 @@ class Ui_Dialog(object):
         product_num = self.order_num_edit.text()
         lib_num = self.lib_num_show_lb.text()
         order_time = self.order_time_de.date().toString('yyyy-MM-dd')
-        if debt == "æ— æ¬ æ¬¾":
+        if debt == "ÎŞÇ·¿î":
             order, process, result = Decision(product_num, lib_num, False)
         else:
             order, process, result = Decision(product_num, lib_num, True, order_time, debt_time)
         if order == -1:
-            error = QMessageBox.critical(QtWidgets.QWidget(),"é”™è¯¯","è®¢è´§é‡è¾“å…¥æœ‰è¯¯")
+            error = QMessageBox.critical(QtWidgets.QWidget(),"´íÎó","¶©»õÁ¿ÊäÈëÓĞÎó")
             return
         self.result_show_lb.setText(result)
 
         client = self.client_cs_cb.currentText()
         product = self.product_cs_cb.currentText()
         if CreateOrder(client, product, product_num, lib_num, order) == -1:
-            error = QMessageBox.critical(QtWidgets.QWidget(),"é”™è¯¯","æ•°æ®åº“å¼‚å¸¸")
+            error = QMessageBox.critical(QtWidgets.QWidget(),"´íÎó","Êı¾İ¿âÒì³£")
         
-    #ç¨‹åºè¯´æ˜æŒ‰é’®ç‚¹å‡»æ§½å‡½æ•°
-    #æ‰“å¼€ç¨‹åºè¯´æ˜æ–‡ä»¶
+    #³ÌĞòËµÃ÷°´Å¥µã»÷²Ûº¯Êı
+    #´ò¿ª³ÌĞòËµÃ÷ÎÄ¼ş
     def IllustrateClick(self):
         illustrate = QProcess.execute("explorer illustrate.txt")
         
-    #æ˜¾ç¤ºæºç æŒ‰é’®ç‚¹å‡»æ§½å‡½æ•°
-    #æ‰“å¼€æºç æ–‡ä»¶
+    #ÏÔÊ¾Ô´Âë°´Å¥µã»÷²Ûº¯Êı
+    #´ò¿ªÔ´ÂëÎÄ¼ş
     def CodeShowClick(self):
         code = QProcess.execute("explorer code.txt")
     
-    #å®¢æˆ·é€‰æ‹©å˜æ›´æ§½å‡½æ•°
-    #åŒæ­¥å®¢æˆ·çš„æ¬ æ¬¾å’Œæ¬ æ¬¾æ—¥æœŸ
+    #¿Í»§Ñ¡Ôñ±ä¸ü²Ûº¯Êı
+    #Í¬²½¿Í»§µÄÇ·¿îºÍÇ·¿îÈÕÆÚ
     def ClientChange(self):
         client = self.client_cs_cb.currentText()
         debt, debt_time = getCustomerArrears(client)
         if debt == -1:
-            error = QMessageBox.critical(QtWidgets.QWidget(),"é”™è¯¯","æ•°æ®åº“å¼‚å¸¸")
+            error = QMessageBox.critical(QtWidgets.QWidget(),"´íÎó","Êı¾İ¿âÒì³£")
         elif debt == 0:
-            self.debt_show_lb.setText("æ— æ¬ æ¬¾")
+            self.debt_show_lb.setText("ÎŞÇ·¿î")
             self.debt_time_show_lb.setText("")
         else:
             self.debt_show_lb.setText(str(debt))
             self.debt_time_show_lb.setText(debt_time)
 
-    #äº§å“é€‰æ‹©å˜æ›´æ§½å‡½æ•°
-    #åŒæ­¥å®¢æˆ·çš„æ¬ æ¬¾å’Œæ¬ æ¬¾æ—¥æœŸ
+    #²úÆ·Ñ¡Ôñ±ä¸ü²Ûº¯Êı
+    #Í¬²½¿Í»§µÄÇ·¿îºÍÇ·¿îÈÕÆÚ
     def ProductChange(self):
         product = self.product_cs_cb.currentText()
         lib_unit, lib_num = getProduct(product)
         if lib_num == -1:
-            error = QMessageBox.critical(QtWidgets.QWidget(),"é”™è¯¯","æ•°æ®åº“å¼‚å¸¸")
+            error = QMessageBox.critical(QtWidgets.QWidget(),"´íÎó","Êı¾İ¿âÒì³£")
         else:
             self.lib_unit_lb.setText(lib_unit)
             self.lib_num_show_lb.setText(str(lib_num))
 
+
+
+utils.py
+import datetime
+from MySql import(
+    getAllCustomers, getAllProducts, getArrears, getInventory, getProductUnit, InsertOrder, DeleteOrder, UpdateInventory
+) 
+
+'''
+»ñÈ¡ËùÓĞÓÃ»§ĞÅÏ¢
+·µ»Ø£ºÓÃ»§ĞÅÏ¢  £¨¸ñÊ½£º[[{key:value},...], ...]£©
+Êı¾İ¿âÒì³£·µ»Ø0
+'''
+def updateCustomers():
+    customerInfo = getAllCustomers()
+    return customerInfo
+
+'''
+»ñÈ¡ËùÓĞ²úÆ·ĞÅÏ¢
+·µ»Ø£º²úÆ·ĞÅÏ¢  £¨¸ñÊ½£º[[{key:value},...], ...]£©
+Êı¾İ¿âÒì³£·µ»Ø0
+'''
+def updateProducts():
+    productInfo = getAllProducts()
+    return productInfo
+
+
+'''
+»ñÈ¡ÓÃ»§µÄÇ·¿îĞÅÏ¢
+ÊäÈë£ºÓÃ»§ĞÅÏ¢£¨´ÓupdateCustomers()»ñÈ¡µÄĞÅÏ¢£©
+Êä³ö£ºÇ·¿î£¬Ç·¿îÊ±¼ä£¨Ã»ÓĞÇ·¿î·µ»Ø0£¬0£©
+Êı¾İ¿âÒì³£·µ»Ø-1£¬ -1
+'''
+def getCustomerArrears(customer):
+    cust = customer.split(" ")
+    custid = cust[0]
+    arrears = getArrears(custid)
+    if(arrears == 0):
+        return -1, -1
+    elif(arrears):
+        return arrears[0]['amount'], arrears[0]['lastdate']
+    else:
+        return 0, 0
+
+
+'''
+»ñÈ¡²úÆ·µÄµ¥Î»ºÍ¿â´æ
+ÊäÈë£º²úÆ·ĞÅÏ¢£¨´ÓupdateProducts£¨£©»ñÈ¡µÄĞÅÏ¢£©
+Êä³ö£ºµ¥Î»£¬¿â´æ£¨Ã»ÓĞ¿â´æ·µ»Ø0£©
+Êı¾İ¿âÒì³£·µ»Ø-1£¬ -1
+'''
+def getProduct(product):
+    prod = product.split(" ")
+    productid = prod[0]
+    unit = getProductUnit(productid)
+    qty = getInventory(productid)
+    if(qty == 0):
+        return -1, -1
+    elif(qty):
+        return unit[0]['unit'], qty[0]['qty']
+    else:
+        return unit[0]['unit'], 0
+
+def day_count(order_time ,owe_time):#¼ÆËãÇ·¿îÌìÊı ¶©»õÊ±¼ä Ç·¿îÊ±¼ä
+    temp=order_time.split('-')
+    order_year=int(temp[0])
+    order_month=int(temp[1])
+    order_day=int(temp[2])
+    temp = owe_time.split('-')
+    owe_year = int(temp[0])
+    owe_month = int(temp[1])
+    owe_day = int(temp[2])
+    date1=datetime.datetime(order_year,order_month,order_day)
+    date2 = datetime.datetime(owe_year, owe_month, owe_day)
+    return date1-date2
+
+'''
+ÊäÈë£º¶©»õÊıÁ¿£¬ ¿â´æ£¬ ÊÇ·ñÇ·¿î£¨¸ù¾İÕâ¸öºóÁ½Ïî¿ÉÑ¡£©£¬ ¶©»õÊ±¼ä£¬ Ç·¿îÊ±¼ä
+·µ»Ø£º¶©µ¥ÀàĞÍ£¨D1,D2,D3£©£¬ÅĞ¶¨¹ı³Ì£¬ÅĞ¶¨½á¹û
+'''
+def Decision(order_num, store_num, ifowe, order_time = None ,owe_time = None):
+
+    order = ""
+    result = ""
+    process = ""
+    try:
+        order_num = int(order_num)
+        store_num = int(store_num)
+    except Exception:
+        return -1, -1, -1
+    if(order_num < 0 or store_num < 0):
+        return -1, -1, -1
+    if(ifowe==False):
+        if(order_num > store_num):
+            order = "D2"
+            process = "ÅĞ¶¨1£ºÇ·¿îÊ±¼äÎª0Ìì\nÅĞ¶¨2£º¿â´æÊıÁ¿" + str(store_num) + " Ğ¡ÓÚ ¶©»õÊıÁ¿" + str(order_num)
+            result = "ÏÈ°´¿â´æ·¢»õ½ø»õÔÙ²¹·¢"
+        else:
+            order = "D1"
+            process = "ÅĞ¶¨1£ºÇ·¿îÊ±¼äÎª0Ìì\nÅĞ¶¨2£º¿â´æÊıÁ¿" + str(store_num) + " ´óÓÚµÈÓÚ ¶©»õÊıÁ¿" + str(order_num)
+            result = "Á¢¼´·¢»õ"
+    else:
+        day_num = day_count(order_time ,owe_time).days  #Ç·¿îÌìÊı
+        if(day_num <= 30):
+            if(order_num <= store_num):
+                order = "D1"
+                process = "ÅĞ¶¨1£ºÇ·¿îÊ±¼äÎª" + str(day_num) + "Ìì\nÅĞ¶¨2£º¿â´æÊıÁ¿" + str(store_num) + " ´óÓÚµÈÓÚ ¶©»õÊıÁ¿" + str(order_num)
+                result = "Á¢¼´·¢»õ"
+            else:
+                order = "D2"
+                process = "ÅĞ¶¨1£ºÇ·¿îÊ±¼äÎª" + str(day_num) + "Ìì\nÅĞ¶¨2£º¿â´æÊıÁ¿" + str(store_num) + " Ğ¡ÓÚ ¶©»õÊıÁ¿" + str(order_num)
+                result = "ÏÈ°´¿â´æ·¢»õ½ø»õÔÙ²¹·¢"
+        elif(30 < day_num < 100):
+            if(order_num <= store_num):
+                order = "D3"
+                process = "ÅĞ¶¨1£ºÇ·¿îÊ±¼äÎª" + str(day_num) + "Ìì\nÅĞ¶¨2£º¿â´æÊıÁ¿" + str(store_num) + " ´óÓÚµÈÓÚ ¶©»õÊıÁ¿" + str(order_num)
+                result = "ÏÈ¸¶¿îÔÙ·¢»õ"
+            else:
+                order = "D3"
+                process = "ÅĞ¶¨1£ºÇ·¿îÊ±¼äÎª" + str(day_num) + "Ìì\nÅĞ¶¨2£º¿â´æÊıÁ¿" + str(store_num) + " Ğ¡ÓÚ ¶©»õÊıÁ¿" + str(order_num)
+                result = "²»·¢»õ"
+        elif(day_num >= 100):
+            if(order_num <= store_num):
+                order = "D3"
+                process = "ÅĞ¶¨1£ºÇ·¿îÊ±¼äÎª" + str(day_num) + "Ìì"
+                result = "Í¨ÖªÏÈ¸¶¿î"
+            else:
+                order = "D3"
+                process = "ÅĞ¶¨1£ºÇ·¿îÊ±¼äÎª" + str(day_num) + "Ìì"
+                result = "Í¨ÖªÏÈ¸¶¿î"
+    return order, process, result
+
+'''
+´´½¨¶©µ¥
+ÊäÈë£º¿Í»§id£¬²úÆ·id£¬¶©»õÊı£¬¿â´æÊı£¬ÀàĞÍ£¨D1£¬D2£¬D3£©
+Êı¾İ¿âÒì³£·µ»Ø-1
+'''
+def CreateOrder(customer, product, order_num, store_num, form):
+    cust = customer.split(" ")
+    custid = cust[0]
+    prod = product.split(" ")
+    productid = prod[0]
+    order_num = int(order_num)
+    store_num = int(store_num)
+    if(form == "D1"):
+        if(InsertOrder(custid, productid, order_num, form) == 0):
+            return -1
+        if(UpdateInventory(productid, store_num - order_num) == 0):
+            return -1
+    elif(form == "D2"):
+        if(InsertOrder(custid, productid, order_num, form) == 0):
+            return -1
+    elif(form == "D3"):
+        if(InsertOrder(custid, productid, order_num, form) == 0):
+            return -1
 
