@@ -98,6 +98,8 @@ def Decision(order_num, store_num, ifowe, order_time = None ,owe_time = None):
             result = "立即发货"
     else:
         day_num = day_count(order_time ,owe_time).days  #欠款天数
+        if(day_num < 0):
+            return -1, -1, -1
         if(day_num <= 30):
             if(order_num <= store_num):
                 order = "D1"
